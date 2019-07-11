@@ -91,7 +91,18 @@
 
 <script>
 export default {
-    name:'CiList'
+    name:'CiList',
+    data(){
+        return {
+            msg:'gaga'
+        }
+    },
+    methods: {
+        show:function(){
+            // console.log('$refstest');
+            return '$refs---test'
+        }
+    }
 }
 </script>
 

@@ -2,7 +2,7 @@
     <div id="main">
        <Header title="影院" />
        <div id="content">
-    			<div class="cinema_menu">
+    			<div class="cinema_menu" @click="test">
 				<div class="city_switch">
 					全城 <i class="iconfont icon-lower-triangle"></i>
 				</div>
@@ -14,7 +14,7 @@
 				</div>
 			</div>
 
-            <CiList/>
+            <CiList ref="one"/>
 
        </div>
        <TabBar/>
@@ -33,6 +33,14 @@ export default {
         Header,
         TabBar,
         CiList
+    },
+    methods: {
+        test:function(){
+            console.log(this.$refs.one);
+            console.log(this.$refs.one.$el);
+            console.log(this.$refs.one.msg);
+            console.log(this.$refs.one.show());
+        }
     }
 }
 </script>
