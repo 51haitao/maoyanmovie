@@ -67,7 +67,7 @@ export default {
                 var firstLetter = cities[i].py.substring(0,1).toUpperCase();
                 if(toCom(firstLetter)){ // 不在添加
                     cityList.push({index : firstLetter,list : [ { nm : cities[i].nm,id : cities[i].id } ] });
-                    console.log(cityList)
+                    // console.log(cityList)
                 }else{ // 在 累加到已有index中
                     for(var j=0;j<cityList.length;j++){
                         if(cityList[j].index === firstLetter){
