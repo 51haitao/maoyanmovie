@@ -1,23 +1,26 @@
 <template>
     <div class="city_body">
         <div class="city_list">
+            <Loading v-if="isLoading" />
+            <Scroller v-else ref="city_List">
+                <div>
+                    <div class="city_hot">
+                        <h2>热门城市</h2>
+                        <ul class="clearfix">
+                            <li v-for="item in hotList" :key="item.id">{{item.nm}}</li>
+                        </ul>
+                    </div>
 
-            <div class="city_hot">
-                <h2>热门城市</h2>
-                <ul class="clearfix">
-                    <li v-for="item in hotList" :key="item.id">{{item.nm}}</li>
-                </ul>
-            </div>
-
-            <div class="city_sort" ref="city_sort">
-                <div v-for="item in cityList" :key="item.index">
-                    <h2>{{item.index}}</h2>
-                    <ul>
-                        <li v-for="itemList in item.list" :key="itemList.id">{{itemList.nm}}</li>
-                    </ul>
+                    <div class="city_sort" ref="city_sort">
+                        <div v-for="item in cityList" :key="item.index">
+                            <h2>{{item.index}}</h2>
+                            <ul>
+                                <li v-for="itemList in item.list" :key="itemList.id">{{itemList.nm}}</li>
+                            </ul>
+                        </div>
+                    </div>  
                 </div>
-            </div>  
-
+            </Scroller> 
         </div>
 
         <div class="city_index">
@@ -36,7 +39,8 @@ export default {
     data(){
         return {
             cityList:[],
-            hotList:[]
+            hotList:[],
+            isLoading : true
         }
     },
     mounted(){
@@ -45,6 +49,7 @@ export default {
             var msg = res.data.msg;
             if(msg === 'ok'){
                 var cities = res.data.data.cities;
+                this.isLoading = false;
                 //this.formatCityList(cities);// 没解析之前
                 var {cityList,hotList} = this.formatCityList(cities);
                 this.cityList = cityList;
@@ -124,18 +129,18 @@ export default {
         },
 
         handleToIndex(index){
-            console.log(this.$refs);
-            console.log(typeof this.$refs); //Object
-            console.log(this.$refs.city_sort); //
-            console.log(this.$refs.city_sort.children);
-            console.log(this.$refs.city_sort.children[0]);
-            console.log(this.$refs.city_sort.children[0].innerHTML);
+            // console.log(this.$refs);
+            // console.log(typeof this.$refs); //Object
+            // console.log(this.$refs.city_sort); //
+            // console.log(this.$refs.city_sort.children);
+            // console.log(this.$refs.city_sort.children[0]);
+            // console.log(this.$refs.city_sort.children[0].innerHTML);
 
-            console.log(this.$refs.city_sort.parentNode);
+            // console.log(this.$refs.city_sort.parentNode);
 
             var h2 = this.$refs.city_sort.getElementsByTagName('h2');
-            this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
-            //this.$refs.city_List.toScrollTop(-h2[index].offsetTop);
+            // this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
+            this.$refs.city_List.toScrollTop(-h2[index].offsetTop);
         }
 
     }
