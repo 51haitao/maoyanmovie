@@ -7,7 +7,7 @@
                     <div class="city_hot">
                         <h2>热门城市</h2>
                         <ul class="clearfix">
-                            <li v-for="item in hotList" :key="item.id">{{item.nm}}</li>
+                            <li v-for="item in hotList" :key="item.id" @tap = handleToCity(item.nm,item.id)>{{item.nm}}</li>
                         </ul>
                     </div>
 
@@ -15,7 +15,7 @@
                         <div v-for="item in cityList" :key="item.index">
                             <h2>{{item.index}}</h2>
                             <ul>
-                                <li v-for="itemList in item.list" :key="itemList.id">{{itemList.nm}}</li>
+                                <li v-for="itemList in item.list" :key="itemList.id" @tap = handleToCity(itemList.nm,itemList.id)>{{itemList.nm}}</li>
                             </ul>
                         </div>
                     </div>  
@@ -44,18 +44,32 @@ export default {
         }
     },
     mounted(){
-        this.axios.get('/api/cityList').then((res)=>{
-            // console.log(res);
-            var msg = res.data.msg;
-            if(msg === 'ok'){
-                var cities = res.data.data.cities;
-                this.isLoading = false;
-                //this.formatCityList(cities);// 没解析之前
-                var {cityList,hotList} = this.formatCityList(cities);
-                this.cityList = cityList;
-                this.hotList = hotList;
+        // 获取
+        var cityList = window.localStorage.getItem('cityList');
+        var hotList = window.localStorage.getItem('hotList');
+
+        // 判断
+        if(cityList && hotList){
+            this.cityList = JSON.parse(cityList);
+            this.hotList = JSON.parse(hotList);
+            this.isLoading = false; 
+        }else{
+            this.axios.get('/api/cityList').then((res)=>{
+                // console.log(res);
+                var msg = res.data.msg;
+                if(msg === 'ok'){
+                    var cities = res.data.data.cities;
+                    this.isLoading = false;
+                    //this.formatCityList(cities);// 没解析之前
+                    var {cityList,hotList} = this.formatCityList(cities);
+                    this.cityList = cityList;
+                    this.hotList = hotList;
+                    // 本地存储
+                    window.localStorage.setItem('cityList',JSON.stringify(cityList));
+                    window.localStorage.setItem('hotList',JSON.stringify(hotList));
+                }
+            })
             }
-        })
     },
     methods:{
         formatCityList(cities){
@@ -98,7 +112,6 @@ export default {
 
             /**
             * 热门城市
-            * 
             */
             
             for(var i=0;i<cities.length;i++){
@@ -127,7 +140,6 @@ export default {
             };
 
         },
-
         handleToIndex(index){
             // console.log(this.$refs);
             // console.log(typeof this.$refs); //Object
@@ -141,6 +153,15 @@ export default {
             var h2 = this.$refs.city_sort.getElementsByTagName('h2');
             // this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
             this.$refs.city_List.toScrollTop(-h2[index].offsetTop);
+        },
+        handleToCity(nm,id){
+            console.log(nm,id);
+            this.$store.commit('City/CITY_INFO',{nm,id});
+            // 切换完城市下次刷新需要还停留在该城市
+            window.localStorage.setItem('nowNm',nm);
+            window.localStorage.setItem('nowId',id);
+            // 切换完成后跳转
+            this.$router.push('/movie/nowPlaying');
         }
 
     }

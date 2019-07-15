@@ -28,7 +28,8 @@ export default {
         return {
             msg:'gaga',
             cinemaList:[],
-            isLoading : true
+            isLoading : true,
+            prevCityId : -1
         }
     },
     methods: {
@@ -37,14 +38,29 @@ export default {
             return '$refs---test'
         }
     },
-    mounted(){
-        this.axios.get('api/cinemaList?cityId=10').then((res)=>{
+    // mounted(){
+    //     this.axios.get('api/cinemaList?cityId=10').then((res)=>{
+    //         var msg = res.data.msg;
+    //         if(msg === 'ok'){
+    //             this.isLoading = false;
+    //             this.cinemaList = res.data.data.cinemas;
+    //         }
+    //     })
+    // },
+    activated(){
+
+        var CityID = this.$store.state.City.id;
+        if( this.prevCityId === CityID ){ return; }
+        this.isLoading = true;
+
+        this.axios.get('/api/cinemaList?cityId='+CityID).then((res)=>{
             var msg = res.data.msg;
             if(msg === 'ok'){
-                this.isLoading = false;
                 this.cinemaList = res.data.data.cinemas;
+                this.isLoading = false;
+                this.prevCityId = CityID;
             }
-        })
+        });
     },
     filters : {
         formatCard(key){

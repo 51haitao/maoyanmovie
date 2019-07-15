@@ -26,16 +26,33 @@ export default {
     data(){
         return {
             comingList:[],
-            isLoading : true 
+            isLoading : true,
+            prevCityId:-1
         }
     },
-    mounted(){
-        this.axios.get('/api/movieComingList?cityId=10').then((res)=>{
-            // console.log(res);
+    // mounted(){
+    //     this.axios.get('/api/movieComingList?cityId=10').then((res)=>{
+    //         // console.log(res);
+    //         var msg = res.data.msg;
+    //         if(msg === 'ok'){
+    //             this.comingList = res.data.data.comingList;
+    //             this.isLoading = false;
+    //         }
+    //     })
+    // }
+    activated(){
+        var CityID = this.$store.state.City.id;
+        if(this.prevCityId === CityID){return;}
+        this.liLoading = true;
+        // console.log(123);
+        // this.axios.get('/api/movieComingList?cityId==10').then((res)=>{
+        this.axios.get('/api/movieComingList?cityId='+CityID).then((res)=>{
             var msg = res.data.msg;
             if(msg === 'ok'){
                 this.comingList = res.data.data.comingList;
                 this.isLoading = false;
+                //请求时 加入 prevCityId 赋值 为了上面做比较
+                this.prevCityId = CityID;
             }
         })
     }

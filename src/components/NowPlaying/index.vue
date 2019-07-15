@@ -30,15 +30,22 @@ export default {
         return {
             movieList:[],
             pullDownMsg:'',
-            isLoading : true
+            isLoading : true,
+            prevCityId:-1
         }
     },
-    mounted(){
-        this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+    activated(){
+        var CityID = this.$store.state.City.id;
+        if(this.prevCityId === CityID){return;}
+        this.liLoading = true;
+        console.log(123);
+        // this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+        this.axios.get('/api/movieOnInfoList?cityId='+CityID).then((res)=>{
             var msg = res.data.msg;
             if(msg === 'ok'){
                 this.movieList = res.data.data.movieList;
                 this.isLoading = false;
+                this.prevCityId = CityID;
                 // // 数据渲染完成之后使用
                 // this.$nextTick(()=>{
                 //     var scroll = new BScroll(this.$refs.movie_body,{
@@ -86,8 +93,9 @@ export default {
             }
         },
         handleToTouchEnd(pos){
+            console.log(this.$store.state.City.id);
             if( pos.y > 30 ){
-                this.axios.get('/api/movieOnInfoList?cityId=11').then((res)=>{
+                this.axios.get('/api/movieOnInfoList?cityId='+this.$store.state.City.id).then((res)=>{
                     var msg = res.data.msg;
                     if( msg === 'ok' ){
                         this.pullDownMsg = '更新成功';
