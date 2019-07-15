@@ -8,17 +8,17 @@
         </div>
         <div class="search_result">
             <h3>电影/电视剧/综艺</h3>
-            <ul>
-                <li v-for="item in moviesList" :key="item.id">
-                    <div class="img"><img :src=" item.img | setWH('128.180') "></div>
-                    <div class="info">
-                        <p><span>{{ item.nm }}</span><span>{{ item.sc }}</span></p>
-                        <p>{{ item.enm }}</p>
-                        <p>{{ item.cat }}</p>
-                        <p>{{ item.rt }}</p>
-                    </div>
-                </li>
-            </ul>
+                <ul>
+                    <li v-for="item in moviesList" :key="item.id">
+                        <div class="img"><img :src=" item.img | setWH('128.180') "></div>
+                        <div class="info">
+                            <p><span>{{ item.nm }}</span><span>{{ item.sc }}</span></p>
+                            <p>{{ item.enm }}</p>
+                            <p>{{ item.cat }}</p>
+                            <p>{{ item.rt }}</p>
+                        </div>
+                    </li>
+                </ul>
         </div>
     </div>
 </template>
@@ -53,8 +53,10 @@ export default {
 
         message(newVal){
             var that = this;
+            var CityID = this.$store.state.City.id;
             this.cancelRequest();
-            this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+            // this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+                this.axios.get('/api/searchList?cityId='+ CityID +'&kw='+newVal,{
                 cancelToken: new this.axios.CancelToken(function(c){
                     that.source = c;
                 })
